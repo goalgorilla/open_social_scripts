@@ -1,0 +1,8 @@
+{
+    "name": "goalgorilla/open_social_scripts",
+    "description": "Repo that contains scripts for Open Social that are not generic enough to be in the distro repo (e.g. docker scripts).",
+    "type": "project",
+    "require": {
+        "composer/installers": "^1.2"
+    }
+}
