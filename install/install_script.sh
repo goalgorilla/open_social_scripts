@@ -14,7 +14,7 @@ fn_sleep() {
   fi
 }
 
-# Set the correct settings.php requires dev-scripts folder to be mounted in /var/www/dev-scripts/.
+# Set the correct settings.php requires scripts folder to be mounted in /var/www/scripts/social.
 chmod 777 /var/www/html/sites/default
 
 if [ -f /var/www/html/sites/default/settings.php ]; then
@@ -27,7 +27,7 @@ if [ -f /var/www/html/sites/default/default.settings.php ]; then
   rm /var/www/html/sites/default/default.settings.php
 fi
 
-cp /var/www/dev-scripts/install/default.settings.php /var/www/html/sites/default/default.settings.php
+cp /var/www/scripts/social/install/default.settings.php /var/www/html/sites/default/default.settings.php
 
 drush -y site-install social --db-url=mysql://root:root@db:3306/social --account-pass=admin install_configure_form.update_status_module='array(FALSE,FALSE)';
 fn_sleep
