@@ -2,12 +2,12 @@
     "name": "goalgorilla/open_social_scripts",
     "description": "Repo that contains scripts for Open Social that are not generic enough to be in the distro repo (e.g. docker scripts).",
     "type": "drupal-drush",
-    "keywords": ["Open Social"],
+    "keywords": ["Open Social", "Drupal", "Scripts"],
     "license": "GPL-2.0+",
     "homepage": "https://github.com/goalgorilla/open_social_scripts",
     "minimum-stability": "dev",
     "require": { },
     "extra": {
-        "installer-name": "Social"
+        "installer-name": "social"
     }
 }
