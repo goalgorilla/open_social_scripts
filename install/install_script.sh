@@ -73,6 +73,9 @@ fn_sleep
 echo "Rebuild node access"
 drush php-eval 'node_access_rebuild()';
 
+echo "Trigger a search api re-index"
+drush php-eval 'drush_search_api_reset_tracker();';
+
 # Add 'dev; to your install script as third argument to enable
 # development modules e.g. pause nfs dev.
 if [[ $DEV == "dev" ]]
