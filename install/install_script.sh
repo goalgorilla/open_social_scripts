@@ -57,8 +57,8 @@ drush pm-enable social_demo -y
 fn_sleep
 echo "enabled module"
 drush cc drush
-drush sda file user group topic event eventenrollment post comment # Add the demo content
-#drush sdr eventenrollment topic event post comment group user file # Remove the demo content
+drush sda file user group topic event eventenrollment post comment like # Add the demo content
+#drush sdr like eventenrollment topic event post comment group user file # Remove the demo content
 drush pm-uninstall social_demo -y
 fn_sleep
 echo "flush image caches"
