@@ -69,7 +69,7 @@ os_demo() {
     drush cache-clear drush
 
     if [ ${DEFAULT_DEMO} ]; then
-        drush sda file user group topic event event_enrollment post comment
+        drush sda file user group topic event event_enrollment post comment like
     fi
 
     if [ ${EXTRA_DEMO} ]; then
