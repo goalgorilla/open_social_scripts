@@ -27,9 +27,17 @@ if [ -f /var/www/html/sites/default/default.settings.php ]; then
   rm /var/www/html/sites/default/default.settings.php
 fi
 
-cp /var/www/scripts/social/install/default.settings.php /var/www/html/sites/default/default.settings.php
+# Do something similar for drushrc.php. This will make drush know the uri of your dev site.
+if [ -f /var/www/html/sites/default/drushrc.php ]; then
+  chmod 777 /var/www/html/sites/default/drushrc.php
+  rm /var/www/html/sites/default/drushrc.php
+fi
 
-drush -y site-install social --db-url=mysql://root:root@db:3306/social --account-pass=admin install_configure_form.update_status_module='array(FALSE,FALSE)';
+cp /var/www/scripts/social/install/default.settings.php /var/www/html/sites/default/default.settings.php
+# Copy the default drushrc.php file.
+cp /var/www/scripts/social/install/default.drushrc.php /var/www/html/sites/default/drushrc.php
+
+drush -y site-install social --db-url=mysql://root:root@db:3306/social --account-pass=admin install_configure_form.update_status_module='array(FALSE,FALSE)' --site-name='Open Social';
 fn_sleep
 echo "installed drupal"
 if [[ $NFS != "nfs" ]]
