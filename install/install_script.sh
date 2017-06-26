@@ -34,8 +34,12 @@ if [ -f /var/www/html/sites/default/drushrc.php ]; then
 fi
 
 cp /var/www/scripts/social/install/default.settings.php /var/www/html/sites/default/default.settings.php
-# Copy the default drushrc.php file.
-cp /var/www/scripts/social/install/default.drushrc.php /var/www/html/sites/default/drushrc.php
+
+# Only add the drushrc file when the VIRTUAL HOST is set.
+if [[ "$VIRTUAL_HOST" != "" ]]; then
+  # Copy the default drushrc.php file and try to replace VIRTUAL_HOST var.
+  sed "s/VHOST/$VIRTUAL_HOST/g" /var/www/scripts/social/install/default.drushrc.php > /var/www/html/sites/default/drushrc.php
+fi
 
 drush -y site-install social --db-url=mysql://root:root@db:3306/social --account-pass=admin install_configure_form.update_status_module='array(FALSE,FALSE)' --site-name='Open Social';
 fn_sleep

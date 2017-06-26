@@ -2,6 +2,6 @@
 /**
  * Drush configuration file for OS local development.
  */
-if (PHP_SAPI === 'cli' && isset($_ENV['VIRTUAL_HOST'])) {
-  $options['uri'] = $_ENV['VIRTUAL_HOST'];
+if (PHP_SAPI === 'cli' && !empty('VHOST') && strpos('VHOST', '.') > 0) {
+  $options['uri'] = 'VHOST';
 }
