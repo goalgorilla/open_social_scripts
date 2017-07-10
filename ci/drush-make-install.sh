@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 pwd
 # First build the site with the make file.
-vendor/bin/drush make scripts/ci/build-social-dev.make make_build
+vendor/bin/drush make scripts/social/ci/build-social-dev.make make_build
 ls -lah
 cd make_build;
 ls -lah
