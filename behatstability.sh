@@ -22,12 +22,8 @@ else
   TAGS="$TAGS&&~DS-2082&&~DS-816"
 fi
 
-echo $TAGS;
-
 PROJECT_FOLDER=/var/www/html/profiles/contrib/social/tests/behat
 
 /var/www/vendor/bin/behat --version
-
-echo $PROJECT_FOLDER/config/behat.yml;
 
 /var/www/vendor/bin/behat $PROJECT_FOLDER --config $PROJECT_FOLDER/config/behat.yml --tags $TAGS
