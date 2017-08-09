@@ -1,0 +1,11 @@
+{
+  "name": "patchchecker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "cli-table": "^0.3.1",
+    "request": "^2.81.0",
+    "request-promise-native": "^1.0.4"
+  }
+}
