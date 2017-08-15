@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 ls -lah html/sites/default
+mkdir -p files_private
 sudo chown -R travis:travis html
 sudo chown -R travis:travis files_private
 chmod 755 html/sites/default
