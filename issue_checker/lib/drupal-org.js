@@ -19,13 +19,14 @@ const issue_status = {
 const httpOptions = {
   url: 'https://www.drupal.org/api-d7/node.json',
   headers: {
-    'Accept': 'application/json'
+    'Accept': 'application/json',
+    'User-Agent': 'Patchchecker/1.1.0 (alexander@goalgorilla.com)'
   },
   json: true,
   transform2xxOnly: true
 };
 
-function getNode(node_id, context) {
+function getPatchStatus(node_id, context) {
   "use strict";
   // Allow a context to be passed to the final promise
   if (typeof context === 'undefined') {
@@ -43,12 +44,19 @@ function getNode(node_id, context) {
       node.field_issue_status = issue_status[node.field_issue_status];
     }
 
-    return Object.assign({}, context, { node: node });
+    // Normalise fields
+    node.id = node.nid;
+    node.status = node.field_issue_status;
+
+    // Add a link to the issue
+    node.link = 'https://www.drupal.org/node/' + node.nid;
+
+    return Object.assign({}, context, { issue: node });
   };
 
   return request(reqOpts);
 }
 
 module.exports = {
-  getNode: getNode
+  getPatchStatus: getPatchStatus
 };

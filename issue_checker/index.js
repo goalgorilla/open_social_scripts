@@ -37,11 +37,10 @@ status
     });
 
     for (let i in issues) {
-      let node = issues[i].node;
+      let issue = issues[i].issue;
 
-      const link = 'https://www.drupal.org/node/' + node.nid;
-      const title = breakTitle(node.title);
-      table.push([node.nid, issues[i].project, node.field_issue_status, title, link]);
+      const title = breakTitle(issue.title);
+      table.push([issue.id, issues[i].project, issue.status, title, issue.link]);
     }
 
     console.log(table.toString());
