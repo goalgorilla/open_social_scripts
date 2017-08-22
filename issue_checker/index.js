@@ -2,17 +2,29 @@
 
 const fs = require('fs');
 const path = require('path');
-var Table = require('cli-table');
+const Table = require('cli-table');
 
 const PatchChecker = require('./lib/patchchecker');
 
-if (process.argv.length !== 3) {
-	console.error("Usage 'checkpatches.js <composer.js>'");
-	return 0;
+let composerFile = '';
+
+if (process.argv.length === 2) {
+  composerFile = 'composer.json';
+}
+else if (process.argv.length === 3) {
+  composerFile = process.argv[2];
+}
+else {
+  console.log("Checks the status of Drupal issues or GitHub pull request for patches applied in the current composer.json");
+  console.log();
+  console.log("Usage:\n\tindex.js [composer.json]");
+  console.log();
+  console.log("\tIf no composer.json file is specified it will use the one in the current directory.");
+  return 0;
 }
 
 // Find the file relative to the current working directory (or absolute path)
-let file = path.resolve(process.cwd(), process.argv[2]);
+let file = path.resolve(process.cwd(), composerFile);
 
 // Load the composer.json file
 let composer = require(file);
@@ -20,7 +32,6 @@ let composer = require(file);
 const checker = new PatchChecker(composer);
 
 let name = composer.name;
-
 
 if (!checker.hasPatches()) {
   console.log("Project " + name + " does not have any patches applied!");
