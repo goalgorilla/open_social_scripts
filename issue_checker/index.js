@@ -44,20 +44,29 @@ const status = checker.getPatchStatus();
 status
   .then(function (issues) {
     let table = new Table({
-      head: ['ID', 'Project', 'Status', 'Title', 'Link']
+      head: ['ID', 'Project', 'Status', 'Release', 'Title', 'Link']
     });
 
     for (let i in issues) {
       let issue = issues[i].issue;
 
       const title = breakTitle(issue.title);
-      table.push([issue.id, issues[i].project, issue.status, title, issue.link]);
+      table.push([issue.id, issues[i].project, issue.status, issue.merged, title, issue.link]);
     }
 
     console.log(table.toString());
   })
   .catch(function (error) {
-    console.log("Could not retrieve node ", error);
+    // TODO: Check if this was in GitHub or move into GitHub handler
+    if (error.statusCode === 403) {
+      let retry_allowed = new Date(error.response.headers['x-ratelimit-reset'] * 1000);
+      console.log("Could not retrieve issues! GitHub API limit exceeded.");
+      console.log("You may try again after", retry_allowed.toLocaleString());
+    }
+    else {
+      console.log("Could not retrieve issues");
+      console.log(error.message);
+    }
   });
 
 /**

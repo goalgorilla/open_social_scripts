@@ -47,6 +47,7 @@ function getPatchStatus(node_id, context) {
     // Normalise fields
     node.id = node.nid;
     node.status = node.field_issue_status;
+    node.merged = "";
 
     // Add a link to the issue
     node.link = 'https://www.drupal.org/node/' + node.nid;
