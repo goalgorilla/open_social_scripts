@@ -27,6 +27,12 @@ if (composerFile === '' || composerFile === '--help') {
 // Find the file relative to the current working directory (or absolute path)
 let file = path.resolve(process.cwd(), composerFile);
 
+// Check if the file exists
+if (!fs.existsSync(file)) {
+  console.log("Could not find composer file:", file);
+  return 1;
+}
+
 // Load the composer.json file
 let composer = require(file);
 
