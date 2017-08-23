@@ -14,7 +14,8 @@ if (process.argv.length === 2) {
 else if (process.argv.length === 3) {
   composerFile = process.argv[2];
 }
-else {
+
+if (composerFile === '' || composerFile === '--help') {
   console.log("Checks the status of Drupal issues or GitHub pull request for patches applied in the current composer.json");
   console.log();
   console.log("Usage:\n\tindex.js [composer.json]");
