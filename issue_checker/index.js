@@ -44,14 +44,14 @@ const status = checker.getPatchStatus();
 status
   .then(function (issues) {
     let table = new Table({
-      head: ['ID', 'Project', 'Status', 'Release', 'Title', 'Link']
+      head: ['ID', 'Project', 'Title', 'Status', 'Release', 'Link']
     });
 
     for (let i in issues) {
       let issue = issues[i].issue;
 
       const title = breakTitle(issue.title);
-      table.push([issue.id, issues[i].project, issue.status, issue.merged, title, issue.link]);
+      table.push([issue.id, issues[i].project, title, issue.status, issue.merged, issue.link]);
     }
 
     console.log(table.toString());
