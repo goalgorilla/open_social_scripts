@@ -47,7 +47,7 @@ class PatchChecker {
         const issuenr = parseInt(parts[0].trim(), 10);
 
         if (isNaN(issuenr)) {
-          console.log(issuenr, "is not a value issue number");
+          console.log(project, "'" + summary + "'", "does not start with a valid issue number");
           // TODO: Add error message promise so it gets added to the table.
           continue;
         }

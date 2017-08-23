@@ -118,17 +118,31 @@ function findRelease(data) {
       continue;
     }
 
-    idx = comment.comment_body.value.indexOf("committed on");
+    const value = comment.comment_body.value;
+
+    // Check for 'committed on' message.
+    idx = value.indexOf("committed on");
 
     // Check if this is the message signaling the commit
     if (idx !== -1) {
+      // Move the index to the start of the tag
+      idx += "committed on <strong>".length;
+      break;
+    }
+
+    // Check for 'authored on' message.
+    idx = value.indexOf(' authored <a href="/commitlog');
+
+    if (idx !== -1) {
+      // Move to start of tag
+      idx = value.indexOf('<strong>', idx) + '<strong>'.length;
       break;
     }
   }
 
-  // We couldn't find the merge so we return an empty release.
+  // We couldn't find the merge so we return 'Unknown' release.
   if (idx === -1) {
-    return '';
+    return 'Unkown';
   }
 
   // We use the date of the message because its close enough to the commit to
@@ -169,17 +183,14 @@ function findRelease(data) {
  * Finds the Drupal major version from a commit message in a comment.
  *
  * @param message
- * @param start
+ * @param branch_start
  * @return {string}
  */
-function findDrupalMajor(message, start) {
+function findDrupalMajor(message, branch_start) {
   "use strict";
-  // The magic length of the string at `start` that's before the branch name
-  const str_len = "committed on <strong>".length;
   // The magic string after the branch name
   const marker = "</strong>";
 
-  let branch_start = start + str_len;
   let branch_end = message.indexOf(marker, branch_start);
 
   const branch = message.substr(branch_start, branch_end - branch_start);
@@ -211,7 +222,7 @@ function getClosestRelease(releases, date) {
   for (let i=0; i < releases.length; i++) {
     let release = releases[i];
     if (release.date > date) {
-      version = release.version;
+      version = release.version[0];
     }
     else {
       break;
