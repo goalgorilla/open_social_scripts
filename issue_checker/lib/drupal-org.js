@@ -14,7 +14,8 @@ const issue_status = {
   14: 'reviewed & tested by the community',
   15: 'patch (to be ported)',
   16: 'postponed (maintainer needs more info)',
-  18: 'closed (cannot reproduce)',
+  17: 'closed (outdated)',
+  18: 'closed (cannot reproduce)'
 };
 
 const httpOptions = {
