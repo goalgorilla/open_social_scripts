@@ -36,12 +36,12 @@ PHPCS_LOCAL=./vendor/bin/phpcs
 PHPCS_CI=../../../../vendor/bin/phpcs
 
 # find out which PHPCS is installed
-if [ -x $PHPCS_GLOBAL ]; then
-    PHPCS_BIN=$PHPCS_GLOBAL
-elif [ -x $PHPCS_LOCAL ]; then
+if [ -x $PHPCS_LOCAL ]; then
     PHPCS_BIN=$PHPCS_LOCAL
 elif [ -x $PHPCS_CI ]; then
     PHPCS_BIN=$PHPCS_CI
+elif [ -x $PHPCS_GLOBAL ]; then
+    PHPCS_BIN=$PHPCS_GLOBAL
 else
     echo "PHP CodeSniffer bin not found or executable in: \n$PHPCS_GLOBAL \n$PHPCS_LOCAL \n$PHPCS_CI"
     exit 1
