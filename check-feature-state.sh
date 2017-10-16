@@ -20,6 +20,7 @@ FEATURE_STATE=`drush fl --bundle=$BUNDLE --fields=machine_name,state`
 
 if [[ $FEATURE_STATE =~ "Changed" ]]
 then
+    drush features-diff --bundle=$BUNDLE
     error_exit "The feature state is not default!"
 else
     echo -e "\033[0;32mThe feature state is default.\033[0m"
