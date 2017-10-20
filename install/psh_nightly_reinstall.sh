@@ -29,7 +29,7 @@ echo "REBUILDING NODE ACCESS"
 drush --root=/app/web -y php-eval 'node_access_rebuild()';
 
 echo "RE-INDEXING ALL SEARCH INDEXES"
-drush --root=/app/web php-eval 'drush --root=/app/web_search_api_reset_tracker();';
+drush --root=/app/web php-eval 'drush_search_api_reset_tracker()';
 
 echo "RUNNING ENTITY UPDATES"
 drush --root=/app/web -y entity-updates;
