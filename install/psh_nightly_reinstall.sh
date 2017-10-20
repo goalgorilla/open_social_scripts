@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 echo "INSTALLING OPEN SOCIAL"
 cd /app/web
 drush --root=/app/web -y site-install social --account-pass=admin install_configure_form.update_status_module='array(FALSE,FALSE)';
