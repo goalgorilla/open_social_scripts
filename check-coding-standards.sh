@@ -14,4 +14,4 @@ fi
 
 # Run PHP Code Sniffer.
 echo "Running PHP Code Sniffer."
-/var/www/vendor/squizlabs/php_codesniffer/scripts/phpcs $REPORT --standard=Drupal --extensions=php,module,inc,install,test,profile,theme /var/www/html/profiles/contrib/social
+/var/www/vendor/squizlabs/php_codesniffer/scripts/phpcs $REPORT --standard=Drupal --extensions=php,module,inc,install,test,profile,theme /var/www/html/profiles/contrib/social --ignore=*/node_modules/*
