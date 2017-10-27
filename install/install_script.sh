@@ -63,6 +63,12 @@ fi
 chmod 777 -R /var/www/files_private;
 chmod 777 -R sites/default/files
 
+# Create swiftmailer-spool directory for behat tests
+if [ ! -d /var/www/html/profiles/contrib/social/tests/behat/features/swiftmailer-spool ]; then
+  mkdir /var/www/html/profiles/contrib/social/tests/behat/features/swiftmailer-spool;
+fi
+chmod 777 -R /var/www/html/profiles/contrib/social/tests/behat/features/swiftmailer-spool;
+
 fn_sleep
 echo "settings.php and files directory permissions"
 drush pm-enable social_demo -y
