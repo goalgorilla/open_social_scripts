@@ -68,6 +68,7 @@ if [ ! -d /var/www/html/profiles/contrib/social/tests/behat/features/swiftmailer
   mkdir /var/www/html/profiles/contrib/social/tests/behat/features/swiftmailer-spool;
 fi
 chmod 777 -R /var/www/html/profiles/contrib/social/tests/behat/features/swiftmailer-spool;
+chown -R www-data:www-data /var/www/html/profiles/contrib/social/tests/behat/features/swiftmailer-spool
 
 fn_sleep
 echo "settings.php and files directory permissions"
