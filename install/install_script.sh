@@ -1,4 +1,6 @@
 #!/bin/bash
+# Ensure we exit with an error on drush errors.
+set -e
 
 # Install script for in the docker container.
 cd /var/www/html/;
