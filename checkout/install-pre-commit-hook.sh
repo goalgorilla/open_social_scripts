@@ -6,6 +6,7 @@ GIT_ROOT=`git rev-parse --git-dir`
 
 # Exit if we're not in a git repository
 if [ -z "$GIT_ROOT" ]; then
+  echo "You must be in a git repository to install the pre-commit hook."
   exit 1
 fi
 
