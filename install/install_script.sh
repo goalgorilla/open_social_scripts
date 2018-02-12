@@ -59,7 +59,16 @@ chmod 444 sites/default/settings.php
 # Create private files directory.
 if [ ! -d /var/www/files_private ]; then
   mkdir /var/www/files_private;
+else
+  # If it exists, empty it.
+  rm -rf /var/www/files_private/*
 fi
+
+# empty existing files directory.
+if [ -d /var/www/html/sites/default/files ]; then
+  rm -rf /var/www/html/sites/default/files/*
+fi
+
 chmod 777 -R /var/www/files_private;
 chmod 777 -R sites/default/files
 
@@ -85,9 +94,7 @@ drush cc drush
 drush image-flush --all
 fn_sleep
 echo "Run activity queues"
-drush queue-run activity_logger_message
-drush queue-run activity_creator_logger
-drush queue-run activity_creator_activities
+drush php-eval 'activity_creator_empty_queue();';
 fn_sleep
 echo "Rebuild node access"
 drush php-eval 'node_access_rebuild()';
