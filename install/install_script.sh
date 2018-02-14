@@ -60,13 +60,14 @@ chmod 444 sites/default/settings.php
 if [ ! -d /var/www/files_private ]; then
   mkdir /var/www/files_private;
 else
-  # If it exists, empty it.
-  rm -rf /var/www/files_private/*
+  # Remove everything but the .htaccess files.
+  find /var/www/files_private/ -type f ! -name "\.htaccess*" -exec rm -rf {} \; 2>/dev/null
 fi
 
 # empty existing files directory.
 if [ -d /var/www/html/sites/default/files ]; then
-  rm -rf /var/www/html/sites/default/files/*
+  # Remove everything but the .htaccess files.
+  find /var/www/html/sites/default/files/ -type f ! -name "\.htaccess*" -exec rm -rf {} \; 2>/dev/null
 fi
 
 chmod 777 -R /var/www/files_private;
