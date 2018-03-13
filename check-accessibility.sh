@@ -14,6 +14,8 @@ if [ "$COMMAND_OR_URL" == "install" ]; then
   npm i
   grunt build
   cd -
+
+  COMMAND_OR_URL="/"
 fi
 
 FILE="/tmp/accessibility.html"
