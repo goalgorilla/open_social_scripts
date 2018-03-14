@@ -15,14 +15,18 @@ if [ "$COMMAND_OR_URL" == "install" ]; then
   grunt build
   cd -
 
-  COMMAND_OR_URL="/"
+  PAGES=( "/" "/explore" "/all-groups" "/community-events" "/all-topics" "/user/register" "/user/login" )
+elif [ -z $COMMAND_OR_URL ]; then
+  PAGES=( "/" )
+else
+  PAGES=( $COMMAND_OR_URL )
 fi
 
 FILE="/tmp/accessibility.html"
 
-if [ -z $COMMAND_OR_URL ]; then
-  COMMAND_OR_URL="/"
-fi
-
-curl -L http://localhost$COMMAND_OR_URL > $FILE
-phantomjs /var/www/vendor/squizlabs/html_codesniffer/Contrib/PhantomJS/HTMLCS_Run.js $FILE WCAG2AAA table
+for PAGE in ${PAGES[@]}; do
+  URL="http://localhost${PAGE}"
+  echo "Checking page: ${URL}"
+  curl -L $URL > $FILE
+  phantomjs /var/www/vendor/squizlabs/html_codesniffer/Contrib/PhantomJS/HTMLCS_Run.js $FILE WCAG2AAA table
+done
