@@ -3,6 +3,7 @@
 COMMAND_OR_URL=$1
 
 if [ "$COMMAND_OR_URL" == "install" ]; then
+  apt-get update
   apt-get install -y npm libfontconfig1
   ln -s /usr/bin/nodejs /usr/bin/node
   npm cache clean -f
