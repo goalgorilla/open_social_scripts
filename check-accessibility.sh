@@ -9,6 +9,7 @@ if [ "$COMMAND_OR_URL" == "install" ]; then
   ln -s /usr/bin/nodejs /usr/bin/node
   nodejs -v
   node -v
+  curl https://www.npmjs.com/install.sh | sh
   npm -v
   npm cache clean -f
   npm install -g n
