@@ -3,10 +3,13 @@
 COMMAND_OR_URL=$1
 
 if [ "$COMMAND_OR_URL" == "install" ]; then
-  curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+  curl -sL https://deb.nodesource.com/setup_10.x | -E bash -
   apt-get update
-  apt-get install -y nodejs libfontconfig1
+  apt-get install -y nodejs libfontconfig1 build-essential
   ln -s /usr/bin/nodejs /usr/bin/node
+  nodejs -v
+  node -v
+  npm -v
   npm cache clean -f
   npm install -g n
   n stable
