@@ -5,7 +5,7 @@ NFS=$2
 DEV=$3
 
 fn_sleep() {
-  if [[ $LOCAL != "nopause" ]]
+  if [[ ${LOCAL} != "nopause" ]]
   then
      sleep 5
   fi
@@ -15,21 +15,21 @@ for i in "$@"
 do
 case ${i} in
     -d|--dev)
-    DEV='dev'
-    shift # past argument with no value
-    ;;
+      DEV='dev'
+      shift # past argument with no value
+      ;;
     -p|--nopause)
-    LOCAL=nopause
-    shift # past argument with no value
-    ;;
+      LOCAL=nopause
+      shift # past argument with no value
+      ;;
     -n|--nfs)
-    NFS=nfs
-    shift # past argument with no value
-    ;;
+      NFS=nfs
+      shift # past argument with no value
+      ;;
     -s|--skip-content)
-    SKIP=skip
-    shift # past argument with no value
-    ;;
+      SKIP=skip
+      shift # past argument with no value
+      ;;
     *)
           # unknown option
     ;;
@@ -84,6 +84,9 @@ chmod 444 sites/default/settings.php
 # Create private files directory.
 if [ ! -d /var/www/files_private ]; then
   mkdir /var/www/files_private;
+else
+  # Empty existing directory
+  rm -rf /var/www/files_private/*
 fi
 chmod 777 -R /var/www/files_private;
 chmod 777 -R sites/default/files
@@ -98,8 +101,10 @@ chown -R www-data:www-data /var/www/html/profiles/contrib/social/tests/behat/fea
 fn_sleep
 echo "settings.php and files directory permissions"
 
-if [[ ${SKIP} != "SKIP" ]]
+if [[ ${SKIP} == "skip" ]]
 then
+  echo "skipping demo content"
+else
   drush pm-enable social_demo -y
   fn_sleep
   drush cc drush
@@ -108,26 +113,25 @@ then
   #drush sdr like eventenrollment topic event post comment group user file # Remove the demo content
   drush pm-uninstall social_demo -y
   fn_sleep
+  echo "flush image caches"
+  drush cc drush
+  drush image-flush --all
+  fn_sleep
+  echo "run activity queues"
+  drush queue-run activity_logger_message
+  drush queue-run activity_creator_logger
+  drush queue-run activity_creator_activities
+  fn_sleep
+  echo "rebuild node access"
+  drush php-eval 'node_access_rebuild()';
+  echo "trigger a search api re-index"
+  drush php-eval 'drush_search_api_reset_tracker();';
 fi
-
-echo "flush image caches"
-drush cc drush
-drush image-flush --all
-fn_sleep
-echo "Run activity queues"
-drush queue-run activity_logger_message
-drush queue-run activity_creator_logger
-drush queue-run activity_creator_activities
-fn_sleep
-echo "Rebuild node access"
-drush php-eval 'node_access_rebuild()';
-
-echo "Trigger a search api re-index"
-drush php-eval 'drush_search_api_reset_tracker();';
 
 # Add 'dev; to your install script as third argument to enable
 # development modules e.g. pause nfs dev.
 if [[ ${DEV} == "dev" ]]
 then
+  echo "enabling devel modules"
   drush en social_devel -y
 fi
