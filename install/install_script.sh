@@ -98,7 +98,7 @@ chown -R www-data:www-data /var/www/html/profiles/contrib/social/tests/behat/fea
 fn_sleep
 echo "settings.php and files directory permissions"
 
-if [[ ${DEV} == "dev" ]]
+if [[ ${SKIP} != "SKIP" ]]
 then
   drush pm-enable social_demo -y
   fn_sleep
