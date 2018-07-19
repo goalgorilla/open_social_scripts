@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Install script for in the docker container.
-cd /var/www/html/;
-
 LOCAL=$1
 NFS=$2
 DEV=$3
@@ -13,6 +10,34 @@ fn_sleep() {
      sleep 5
   fi
 }
+
+for i in "$@"
+do
+case ${i} in
+    -d|--dev)
+    DEV='dev'
+    shift # past argument with no value
+    ;;
+    -p|--nopause)
+    LOCAL=nopause
+    shift # past argument with no value
+    ;;
+    -n|--nfs)
+    NFS=nfs
+    shift # past argument with no value
+    ;;
+    -s|--skip-content)
+    SKIP=skip
+    shift # past argument with no value
+    ;;
+    *)
+          # unknown option
+    ;;
+esac
+done
+
+# Install script for in the docker container.
+cd /var/www/html/;
 
 # Set the correct settings.php requires scripts folder to be mounted in /var/www/scripts/social.
 chmod 777 /var/www/html/sites/default
@@ -44,7 +69,7 @@ fi
 drush -y site-install social --db-url=mysql://root:root@db:3306/social --account-pass=admin install_configure_form.update_status_module='array(FALSE,FALSE)' --site-name='Open Social';
 fn_sleep
 echo "installed drupal"
-if [[ $NFS != "nfs" ]]
+if [[ ${NFS} != "nfs" ]]
   then
     chown -R www-data:www-data /var/www/html/
     fn_sleep
@@ -72,14 +97,19 @@ chown -R www-data:www-data /var/www/html/profiles/contrib/social/tests/behat/fea
 
 fn_sleep
 echo "settings.php and files directory permissions"
-drush pm-enable social_demo -y
-fn_sleep
-echo "enabled module"
-drush cc drush
-drush sda file user group topic event eventenrollment post comment like # Add the demo content
-#drush sdr like eventenrollment topic event post comment group user file # Remove the demo content
-drush pm-uninstall social_demo -y
-fn_sleep
+
+if [[ ${DEV} == "dev" ]]
+then
+  drush pm-enable social_demo -y
+  fn_sleep
+  drush cc drush
+  echo "creating demo content"
+  drush sda file user group topic event eventenrollment post comment like # Add the demo content
+  #drush sdr like eventenrollment topic event post comment group user file # Remove the demo content
+  drush pm-uninstall social_demo -y
+  fn_sleep
+fi
+
 echo "flush image caches"
 drush cc drush
 drush image-flush --all
@@ -97,7 +127,7 @@ drush php-eval 'drush_search_api_reset_tracker();';
 
 # Add 'dev; to your install script as third argument to enable
 # development modules e.g. pause nfs dev.
-if [[ $DEV == "dev" ]]
+if [[ ${DEV} == "dev" ]]
 then
   drush en social_devel -y
 fi
