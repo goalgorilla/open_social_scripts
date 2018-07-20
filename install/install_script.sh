@@ -122,11 +122,12 @@ else
   drush queue-run activity_creator_logger
   drush queue-run activity_creator_activities
   fn_sleep
-  echo "rebuild node access"
-  drush php-eval 'node_access_rebuild()';
   echo "trigger a search api re-index"
   drush php-eval 'drush_search_api_reset_tracker();';
 fi
+
+echo "rebuild node access"
+drush php-eval 'node_access_rebuild()';
 
 # Add 'dev; to your install script as third argument to enable
 # development modules e.g. pause nfs dev.
