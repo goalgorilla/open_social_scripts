@@ -20,7 +20,12 @@ FEATURE_STATE=`drush fl --bundle=$BUNDLE --fields=machine_name,state`
 
 if [[ $FEATURE_STATE =~ "Changed" ]]
 then
-    drush features-diff --bundle=$BUNDLE
+    # Print the difference for each changed feature.
+    echo "$FEATURE_STATE" | grep "Changed" | awk '{ print $1 }' | while read -r feature; do
+        echo -e "Showing difference for \033[34m${feature}\033[0m...\n"
+        drush features-diff "$feature"
+	echo -e "\n"
+    done
     error_exit "The feature state is not default!"
 else
     echo -e "\033[0;32mThe feature state is default.\033[0m"
