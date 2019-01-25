@@ -8,6 +8,9 @@ drush --root=/app/web -y site-install social --account-pass=admin install_config
 echo "RESETTING OPCACHE"
 php -r 'opcache_reset();';
 
+echo "ENABLING MULTIPLE SOCIAL EXTENSIONS"
+drush --root=/app/web -y pm-enable social_book social_comment_upload social_event_an_enroll social_event_type social_gdpr social_group_quickjoin social_landing_page social_sharing social_tagging social_user_export social_embed social_private_message social_profile_fields social_profile_organization_tag social_profile_privacy
+
 echo "ENABLING DEMO CONTENT MODULE"
 drush --root=/app/web -y pm-enable social_demo
 
