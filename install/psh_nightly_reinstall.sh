@@ -1,14 +1,25 @@
 #!/bin/bash
 
 echo "INSTALLING OPEN SOCIAL"
-cd /app/web
+drush --root=/app/web -y sql-drop
 drush --root=/app/web -y site-install social --account-pass=admin install_configure_form.update_status_module='array(FALSE,FALSE)';
 
 echo "RESETTING OPCACHE"
 php -r 'opcache_reset();';
 
+drush --root=/app/web -y cr
+
+drush --root=/app/web -y sql-dump > /tmp/clean.sql
+
+drush --root=/app/web -y pm-enable redis
 echo "ENABLING MULTIPLE SOCIAL EXTENSIONS"
-drush --root=/app/web -y pm-enable social_book social_comment_upload social_event_an_enroll social_event_type social_gdpr social_group_quickjoin social_landing_page social_sharing social_tagging social_user_export social_embed social_private_message social_profile_fields social_profile_organization_tag social_profile_privacy social_lazy_loading social_lazy_loading_images redis
+drush --root=/app/web -y pm-enable social_book social_comment_upload social_event_an_enroll social_event_type social_gdpr social_group_quickjoin social_landing_page social_sharing social_tagging social_user_export social_embed social_private_message social_profile_fields social_profile_organization_tag social_profile_privacy
+
+drush --root=/app/web -y sql-dump > /tmp/clean-with-optional-modules.sql
+
+drush --root=/app/web -y pm-enable social_lazy_loading social_lazy_loading_images
+
+drush --root=/app/web -y sql-dump > /tmp/clean-with-all-modules.sql
 
 echo "ENABLING DEMO CONTENT MODULE"
 drush --root=/app/web -y pm-enable social_demo
@@ -36,3 +47,7 @@ drush --root=/app/web php-eval 'drush_search_api_reset_tracker()';
 
 echo "RUNNING ENTITY UPDATES"
 drush --root=/app/web -y entity-updates;
+
+drush --root=/app/web -y cr
+
+drush --root=/app/web -y sql-dump > /tmp/clean-with-all-modules-demo-content.sql
