@@ -121,6 +121,7 @@ else
   drush queue-run activity_logger_message
   drush queue-run activity_creator_logger
   drush queue-run activity_creator_activities
+  drush queue-run activity_send_email_worker
   fn_sleep
   echo "trigger a search api re-index"
   drush php-eval 'drush_search_api_reset_tracker();';
