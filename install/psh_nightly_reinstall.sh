@@ -27,6 +27,8 @@ drush --root=/app/web -y pm-enable social_demo
 echo "IMPORTING DEMO CONTENT"
 drush --root=/app/web -y cc drush
 drush --root=/app/web -y sda file user group topic event eventenrollment page post comment like link # Add the demo content
+echo "GENERATING ADDITIONAL DEMO CONTENT"
+drush --root=/app/web -y sdg user:5000 topic:1500 event:1000 group:100 post:7500 comment:5000
 
 echo "DISABLING DEMO CONTENT MODULE"
 drush --root=/app/web -y pm-uninstall social_demo
