@@ -27,8 +27,28 @@ drush --root=/app/web -y pm-enable social_demo
 echo "IMPORTING DEMO CONTENT"
 drush --root=/app/web -y cc drush
 drush --root=/app/web -y sda file user group topic event eventenrollment page post comment like link # Add the demo content
-echo "GENERATING ADDITIONAL DEMO CONTENT"
-drush --root=/app/web -y sdg user:5000 topic:1500 event:1000 group:100 post:7500 comment:5000
+echo "GENERATING ADDITIONAL DEMO CONTENT, THIS MAY TAKE A WHILE" # NOTE: Run each content type separately to prevent the memory to be exhausted.
+# Create users.
+drush --root=/app/web -y sdg user:2500
+drush --root=/app/web -y sdg user:2500
+# Create topics.
+drush --root=/app/web -y sdg topic:1500
+# Create events.
+drush --root=/app/web -y sdg event:1000
+# Create groups.
+drush --root=/app/web -y sdg group:100
+# Create pages.
+drush --root=/app/web -y sdg page:500
+# Create posts.
+drush --root=/app/web -y sdg post:3000
+drush --root=/app/web -y sdg post:3000
+# Create comments.
+drush --root=/app/web -y sdg comment:2500
+drush --root=/app/web -y sdg comment:2500
+# Create likes.
+drush --root=/app/web -y sdg like:1000
+drush --root=/app/web -y sdg like:1000
+
 
 echo "DISABLING DEMO CONTENT MODULE"
 drush --root=/app/web -y pm-uninstall social_demo
