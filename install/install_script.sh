@@ -26,6 +26,10 @@ case ${i} in
       NFS=nfs
       shift # past argument with no value
       ;;
+    -wo|--with-optional)
+      OPTIONAL=optional
+      shift # past argument with no value
+      ;;
     -s|--skip-content)
       SKIP=skip
       shift # past argument with no value
@@ -66,9 +70,18 @@ if [[ "$VIRTUAL_HOST" != "" ]]; then
   sed "s/VHOST/$VIRTUAL_HOST/g" /var/www/scripts/social/install/default.drushrc.php > /var/www/html/sites/default/drushrc.php
 fi
 
-drush -y site-install social --db-url=mysql://root:root@db:3306/social --account-pass=admin install_configure_form.update_status_module='array(FALSE,FALSE)' --site-name='Open Social';
+if [[ ${OPTIONAL} == "optional" ]]; then
+  # Install with the optional modules declaring having a module.installer_options.yml
+  # See #3110127
+  drush -y site-install social --db-url=mysql://root:root@db:3306/social --account-pass=admin social_module_configure_form.select_all='TRUE' install_configure_form.update_status_module='array(FALSE,FALSE)' --site-name='Open Social';
+  echo "installed drupal including optional modules"
+else
+  # Use the normal installer without optional modules
+  drush -y site-install social --db-url=mysql://root:root@db:3306/social --account-pass=admin install_configure_form.update_status_module='array(FALSE,FALSE)' --site-name='Open Social';
+  echo "installed drupal"
+fi
+
 fn_sleep
-echo "installed drupal"
 if [[ ${NFS} != "nfs" ]]
   then
     chown -R www-data:www-data /var/www/html/
