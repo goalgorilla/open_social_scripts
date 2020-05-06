@@ -1,0 +1,75 @@
+#!/usr/bin/env drush
+
+/**
+ * Usage: drush move_file.drush
+ */
+
+use Drupal\file\Entity\File;
+
+drush_print('Ready to move private image files...');
+$confirm = drush_confirm('Do you want to move all managed private image files to public files?');
+
+// Stop if confirmation step failed.
+if (!$confirm) {
+  drush_set_context('DRUSH_EXECUTION_COMPLETED', TRUE);
+  drush_set_context('DRUSH_EXIT_CODE', DRUSH_SUCCESS);
+  exit(0);
+}
+
+// Select all private image files.
+$file_ids = \Drupal::database()->select('file_managed', 'f')
+  ->fields('f', ['fid'])
+  ->condition('f.uri', 'private://%', 'LIKE')
+  ->condition('f.filemime', 'image%', 'LIKE')
+  ->execute()->fetchCol();
+
+// Exit if we have nothing to do.
+if (empty($file_ids)) {
+  drush_print('Nothing to do...');
+  drush_set_context('DRUSH_EXECUTION_COMPLETED', TRUE);
+  drush_set_context('DRUSH_EXIT_CODE', DRUSH_SUCCESS);
+  exit(0);
+}
+
+$time_start = microtime(true);
+$chunks = array_chunk($file_ids, 50);
+
+// Process the file chunks.
+foreach ($chunks as $chunk) {
+  process_files($chunk);
+}
+
+$time_end = microtime(true);
+$execution_time = ($time_end - $time_start);
+drush_print('Finished processing ' . count($file_ids) . ' files...');
+drush_print('Total Execution Time: ' . round($execution_time, 2) . ' seconds');
+
+drush_print('You may consider clearing the cache now.');
+
+/**
+ * Process files.
+ */
+function process_files($file_ids) {
+  drush_print('Starting to process files...');
+
+  $i = 0;
+  $total = count($file_ids);
+  $files = File::loadMultiple($file_ids);
+
+  // Loop through the files.
+  foreach ($files as $file) {
+    // Loop through the results and move them to the public folder.
+    $destination = $file->getFileUri();
+
+    // Change the destination and move the file.
+    $destination = str_replace('private', 'public', $destination);
+    if (file_prepare_directory($destination, FILE_CREATE_DIRECTORY)) {
+      file_move($file, $destination);
+    }
+
+    drush_print('Processed file with ID ' . $file->id() . ' (' . ($i + 1) . '/' . $total . ')');
+    $i++;
+  }
+
+  drush_print('Processed ' . $i . ' files...');
+}
