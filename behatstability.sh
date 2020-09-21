@@ -26,4 +26,5 @@ PROJECT_FOLDER=/var/www/html/profiles/contrib/social/tests/behat
 
 /var/www/vendor/bin/behat --version
 
-/var/www/vendor/bin/behat -vv $PROJECT_FOLDER --config $PROJECT_FOLDER/config/behat.yml --tags $TAGS
+# --snippets-for=cli is needed for output in newer versions of Behat.
+/var/www/vendor/bin/behat -vv $PROJECT_FOLDER --config $PROJECT_FOLDER/config/behat.yml --tags $TAGS --snippets-for=cli
