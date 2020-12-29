@@ -1,5 +1,7 @@
 #!/bin/bash
 # Ensure we exit with an error on drush errors.
+set -e
+
 LOCAL=$1
 NFS=$2
 DEV=$3
