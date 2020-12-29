@@ -1,7 +1,5 @@
 #!/bin/bash
 # Ensure we exit with an error on drush errors.
-set -e
-
 LOCAL=$1
 NFS=$2
 DEV=$3
@@ -112,6 +110,14 @@ if [ ! -d /var/www/html/profiles/contrib/social/tests/behat/features/swiftmailer
 fi
 chmod 777 -R /var/www/html/profiles/contrib/social/tests/behat/features/swiftmailer-spool;
 chown -R www-data:www-data /var/www/html/profiles/contrib/social/tests/behat/features/swiftmailer-spool
+
+# Make sure we add swiftmailer default settings if it exists as container.
+if drush ev "echo getenv('DRUPAL_SETTINGS');" | grep -q 'development'; then
+  drush cset swiftmailer.transport transport 'smtp' -y
+  drush cset swiftmailer.transport smtp_host 'mailcatcher' -y
+  drush cset swiftmailer.transport smtp_port 1025 -y
+  echo "updated mailcachter settings"
+fi
 
 fn_sleep
 echo "settings.php and files directory permissions"
