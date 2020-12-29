@@ -26,8 +26,12 @@ case ${i} in
       NFS=nfs
       shift # past argument with no value
       ;;
+    -ls|--localsettings)
+      SETTINGS='local'
+      shift # past argument with no value
+      ;;
     -wo|--with-optional)
-      OPTIONAL=optional
+      OPTIONAL='optional'
       shift # past argument with no value
       ;;
     -s|--skip-content)
@@ -111,12 +115,21 @@ fi
 chmod 777 -R /var/www/html/profiles/contrib/social/tests/behat/features/swiftmailer-spool;
 chown -R www-data:www-data /var/www/html/profiles/contrib/social/tests/behat/features/swiftmailer-spool
 
-# Make sure we add swiftmailer default settings if it exists as container.
+# Make sure we add swiftmailer default settings if the environment is development
 if drush ev "echo getenv('DRUPAL_SETTINGS');" | grep -q 'development'; then
   drush cset swiftmailer.transport transport 'smtp' -y
   drush cset swiftmailer.transport smtp_host 'mailcatcher' -y
   drush cset swiftmailer.transport smtp_port 1025 -y
-  echo "updated mailcachter settings"
+  echo "updated swiftmailer settings"
+fi
+
+# Make sure we add swiftmailer default settings if the environment is set to local.
+if [[ ${SETTINGS} == "local" ]]
+then
+  drush cset swiftmailer.transport transport 'smtp' -y
+  drush cset swiftmailer.transport smtp_host 'mailcatcher' -y
+  drush cset swiftmailer.transport smtp_port 1025 -y
+  echo "updated swiftmailer settings"
 fi
 
 fn_sleep
