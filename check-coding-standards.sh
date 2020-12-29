@@ -16,4 +16,4 @@ ${PHPCS} --config-set ignore_warnings_on_exit 0
 
 # Run PHP Code Sniffer.
 echo "Running PHP Code Sniffer with Drupal sniffer."
-${PHPCS} --report-full --standard=Drupal,DrupalPractice --extensions=php,module,inc,install,test,profile,theme /var/www/html/profiles/contrib/social --ignore=*/node_modules/* --ignore=*.css --ignore=social.info.yml --ignore=.github/PULL_REQUEST_TEMPLATE.md
+${PHPCS} $REPORT --standard=Drupal --extensions=php,module,inc,install,test,profile,theme /var/www/html/profiles/contrib/social --ignore=*/node_modules/* --ignore=*.css --ignore=social.info.yml --ignore=.github/PULL_REQUEST_TEMPLATE.md
