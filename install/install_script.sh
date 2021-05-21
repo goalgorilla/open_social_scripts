@@ -5,6 +5,8 @@
 LOCAL=$1
 NFS=$2
 DEV=$3
+OPTIONAL=$4
+SETTINGS=$5
 
 fn_sleep() {
   if [[ ${LOCAL} != "nopause" ]]
