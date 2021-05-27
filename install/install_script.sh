@@ -156,10 +156,14 @@ else
   drush image-flush --all
   fn_sleep
   echo "run activity queues"
+  # Remove queue-run after OS 11.x
   drush queue-run activity_logger_message
   drush queue-run activity_creator_logger
   drush queue-run activity_creator_activities
   drush queue-run activity_send_email_worker
+  # End removals.
+  # Since we are now having ultimate cron and advance queue, we need to run drush cron separately as drush queue-run doesn't works.
+  drush cron
   fn_sleep
   echo "trigger a search api re-index"
   drush php-eval 'drush_search_api_reset_tracker();';
