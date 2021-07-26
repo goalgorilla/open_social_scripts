@@ -177,5 +177,5 @@ drush php-eval 'node_access_rebuild()';
 if [[ ${DEV} == "dev" ]]
 then
   echo "enabling devel modules"
-  drush en social_devel -y
+  drush en -y config_update config_update_ui devel kint devel_generate dblog views_ui field_ui contextual
 fi
