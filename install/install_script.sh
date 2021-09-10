@@ -81,11 +81,11 @@ fi
 if [[ ${OPTIONAL} == "optional" ]]; then
   # Install with the optional modules declaring having a module.installer_options.yml
   # See #3110127
-  drush -y site-install social --db-url=mysql://root:root@db:3306/social --account-pass=admin social_module_configure_form.select_all='TRUE' install_configure_form.update_status_module='array(FALSE,FALSE)' --site-name='Open Social';
+  drush -y si social --db-url=mysql://root:root@db:3306/social --account-pass=admin social_module_configure_form.select_all='TRUE' install_configure_form.update_status_module='array(FALSE,FALSE)' --site-name='Open Social';
   echo "installed drupal including optional modules"
 else
   # Use the normal installer without optional modules
-  drush -y site-install social --db-url=mysql://root:root@db:3306/social --account-pass=admin install_configure_form.update_status_module='array(FALSE,FALSE)' --site-name='Open Social';
+  drush -y si social --db-url=mysql://root:root@db:3306/social --account-pass=admin install_configure_form.update_status_module='array(FALSE,FALSE)' --site-name='Open Social';
   echo "installed drupal"
 fi
 
@@ -143,34 +143,28 @@ if [[ ${SKIP} == "skip" ]]
 then
   echo "skipping demo content"
 else
-  drush pm-enable social_demo -y
+  drush en social_demo -y
   fn_sleep
   drush cc drush
   echo "creating demo content"
-  drush sda file user group topic event eventenrollment post comment like # Add the demo content
-  #drush sdr like eventenrollment topic event post comment group user file # Remove the demo content
-  drush pm-uninstall social_demo -y
+  drush sda file user group topic event event_enrollment post comment like # Add the demo content
+  #drush sdr like event_enrollment topic event post comment group user file # Remove the demo content
+  drush pmu social_demo -y
   fn_sleep
   echo "flush image caches"
   drush cc drush
-  drush image-flush --all
+  drush if --all
   fn_sleep
   echo "run activity queues"
-  # Remove queue-run after OS 11.x
-  drush queue-run activity_logger_message
-  drush queue-run activity_creator_logger
-  drush queue-run activity_creator_activities
-  drush queue-run activity_send_email_worker
-  # End removals.
-  # Since we are now having ultimate cron and advance queue, we need to run drush cron separately as drush queue-run doesn't works.
+  # Since we are now having ultimate cron and advance queue, we need to run drush cron separately as drush queue:run doesn't works.
   drush cron
   fn_sleep
   echo "trigger a search api re-index"
-  drush php-eval 'drush_search_api_reset_tracker();';
+  drush sapi-rt
 fi
 
 echo "rebuild node access"
-drush php-eval 'node_access_rebuild()';
+drush ev 'node_access_rebuild()';
 
 # Add 'dev; to your install script as third argument to enable
 # development modules e.g. pause nfs dev.
