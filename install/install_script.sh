@@ -112,28 +112,34 @@ fi
 chmod 777 -R /var/www/files_private;
 chmod 777 -R sites/default/files
 
-# Create swiftmailer-spool directory for behat tests
-if [ ! -d /var/www/html/profiles/contrib/social/tests/behat/features/swiftmailer-spool ]; then
-  mkdir /var/www/html/profiles/contrib/social/tests/behat/features/swiftmailer-spool;
+# Create symfony-mailer-spool directory for behat tests
+if [ ! -d /var/www/html/profiles/contrib/social/tests/behat/features/symfony-mailer-spool ]; then
+  mkdir /var/www/html/profiles/contrib/social/tests/behat/features/symfony-mailer-spool;
 fi
-chmod 777 -R /var/www/html/profiles/contrib/social/tests/behat/features/swiftmailer-spool;
-chown -R www-data:www-data /var/www/html/profiles/contrib/social/tests/behat/features/swiftmailer-spool
+chmod 777 -R /var/www/html/profiles/contrib/social/tests/behat/features/symfony-mailer-spool;
+chown -R www-data:www-data /var/www/html/profiles/contrib/social/tests/behat/features/symfony-mailer-spool
 
-# Make sure we add swiftmailer default settings if the environment is development
+# Make sure we add symfony mailer default settings if the environment is development
 if drush ev "echo getenv('DRUPAL_SETTINGS');" | grep -q 'development'; then
-  drush cset swiftmailer.transport transport 'smtp' -y
-  drush cset swiftmailer.transport smtp_host 'mailcatcher' -y
-  drush cset swiftmailer.transport smtp_port 1025 -y
-  echo "updated swiftmailer settings"
+  drush ev "\Drupal::service('config.factory')->getEditable('symfony_mailer.mailer_transport.mailcatcher')->set('id', 'mailcatcher')->save();"
+  drush cset symfony_mailer.mailer_transport.mailcatcher label Mailcatcher -y
+  drush cset symfony_mailer.mailer_transport.mailcatcher plugin smtp -y
+  drush cset symfony_mailer.mailer_transport.mailcatcher configuration.host mailcatcher -y
+  drush cset symfony_mailer.mailer_transport.mailcatcher configuration.port 1025 -y
+  drush cset symfony_mailer.settings default_transport mailcatcher -y
+  echo "updated symfony mailer settings"
 fi
 
-# Make sure we add swiftmailer default settings if the environment is set to local.
+# Make sure we add symfony mailer default settings if the environment is set to local.
 if [[ ${SETTINGS} == "local" ]]
 then
-  drush cset swiftmailer.transport transport 'smtp' -y
-  drush cset swiftmailer.transport smtp_host 'mailcatcher' -y
-  drush cset swiftmailer.transport smtp_port 1025 -y
-  echo "updated swiftmailer settings"
+  drush ev "\Drupal::service('config.factory')->getEditable('symfony_mailer.mailer_transport.mailcatcher')->set('id', 'mailcatcher')->save();"
+  drush cset symfony_mailer.mailer_transport.mailcatcher label Mailcatcher -y
+  drush cset symfony_mailer.mailer_transport.mailcatcher plugin smtp -y
+  drush cset symfony_mailer.mailer_transport.mailcatcher configuration.host mailcatcher -y
+  drush cset symfony_mailer.mailer_transport.mailcatcher configuration.port 1025 -y
+  drush cset symfony_mailer.settings default_transport mailcatcher -y
+  echo "updated symfony mailer settings"
 fi
 
 fn_sleep
