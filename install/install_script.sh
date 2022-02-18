@@ -7,6 +7,7 @@ NFS=$2
 DEV=$3
 OPTIONAL=$4
 SETTINGS=$5
+OS_VERSION=$(composer show goalgorilla/open_social | sed -n '/versions/s/^[^0-9]\+\([^,]\+\).*$/\1/p') | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'
 
 fn_sleep() {
   if [[ ${LOCAL} != "nopause" ]]
@@ -119,27 +120,23 @@ fi
 chmod 777 -R /var/www/html/profiles/contrib/social/tests/behat/features/symfony-mailer-spool;
 chown -R www-data:www-data /var/www/html/profiles/contrib/social/tests/behat/features/symfony-mailer-spool
 
-# Make sure we add symfony mailer default settings if the environment is development
-if drush ev "echo getenv('DRUPAL_SETTINGS');" | grep -q 'development'; then
-  drush ev "\Drupal::service('config.factory')->getEditable('symfony_mailer.mailer_transport.mailcatcher')->set('id', 'mailcatcher')->save();"
-  drush cset symfony_mailer.mailer_transport.mailcatcher label Mailcatcher -y
-  drush cset symfony_mailer.mailer_transport.mailcatcher plugin smtp -y
-  drush cset symfony_mailer.mailer_transport.mailcatcher configuration.host mailcatcher -y
-  drush cset symfony_mailer.mailer_transport.mailcatcher configuration.port 1025 -y
-  drush cset symfony_mailer.settings default_transport mailcatcher -y
-  echo "updated symfony mailer settings"
-fi
-
-# Make sure we add symfony mailer default settings if the environment is set to local.
-if [[ ${SETTINGS} == "local" ]]
-then
-  drush ev "\Drupal::service('config.factory')->getEditable('symfony_mailer.mailer_transport.mailcatcher')->set('id', 'mailcatcher')->save();"
-  drush cset symfony_mailer.mailer_transport.mailcatcher label Mailcatcher -y
-  drush cset symfony_mailer.mailer_transport.mailcatcher plugin smtp -y
-  drush cset symfony_mailer.mailer_transport.mailcatcher configuration.host mailcatcher -y
-  drush cset symfony_mailer.mailer_transport.mailcatcher configuration.port 1025 -y
-  drush cset symfony_mailer.settings default_transport mailcatcher -y
-  echo "updated symfony mailer settings"
+# Make sure we add mailer default settings if the environment is development
+if [[ $(drush ev "echo getenv('DRUPAL_SETTINGS');" | grep "development") ]] || [[ ${SETTINGS} = "local" ]]; then
+  # Enable symfony mailer only for the OS 12+
+  if [ -n ${OS_VERSION} ] && [ ${OS_VERSION} -ge "12000000000" ]; then
+    drush ev "\Drupal::service('config.factory')->getEditable('symfony_mailer.mailer_transport.mailcatcher')->set('id', 'mailcatcher')->save();"
+    drush cset symfony_mailer.mailer_transport.mailcatcher label Mailcatcher -y
+    drush cset symfony_mailer.mailer_transport.mailcatcher plugin smtp -y
+    drush cset symfony_mailer.mailer_transport.mailcatcher configuration.host mailcatcher -y
+    drush cset symfony_mailer.mailer_transport.mailcatcher configuration.port 1025 -y
+    drush cset symfony_mailer.settings default_transport mailcatcher -y
+    echo "updated symfony mailer settings"
+  else
+    drush cset swiftmailer.transport transport 'smtp' -y
+    drush cset swiftmailer.transport smtp_host 'mailcatcher' -y
+    drush cset swiftmailer.transport smtp_port 1025 -y
+    echo "updated swiftmailer settings"
+  fi
 fi
 
 fn_sleep
