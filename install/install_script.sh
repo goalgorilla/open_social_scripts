@@ -7,7 +7,7 @@ NFS=$2
 DEV=$3
 OPTIONAL=$4
 SETTINGS=$5
-OS_VERSION=$(composer show goalgorilla/open_social | sed -n '/versions/s/^[^0-9]\+\([^,]\+\).*$/\1/p') | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'
+OS_VERSION=$(composer show goalgorilla/open_social | sed -n '/versions/s/^[^0-9]\+\([^,]\+\).*$/\1/p' | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }')
 
 fn_sleep() {
   if [[ ${LOCAL} != "nopause" ]]
