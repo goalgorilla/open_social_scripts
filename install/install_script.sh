@@ -113,17 +113,18 @@ fi
 chmod 777 -R /var/www/files_private;
 chmod 777 -R sites/default/files
 
-# Create symfony-mailer-spool directory for behat tests
-if [ ! -d /var/www/html/profiles/contrib/social/tests/behat/features/symfony-mailer-spool ]; then
-  mkdir /var/www/html/profiles/contrib/social/tests/behat/features/symfony-mailer-spool;
-fi
-chmod 777 -R /var/www/html/profiles/contrib/social/tests/behat/features/symfony-mailer-spool;
-chown -R www-data:www-data /var/www/html/profiles/contrib/social/tests/behat/features/symfony-mailer-spool
-
 # Make sure we add mailer default settings if the environment is development
 if [[ $(drush ev "echo getenv('DRUPAL_SETTINGS');" | grep "development") ]] || [[ ${SETTINGS} = "local" ]]; then
   # Enable symfony mailer only for the OS 12+
   if [ -n ${OS_VERSION} ] && [ ${OS_VERSION} -ge "12000000000" ]; then
+    # Create spool directory for behat tests
+    if [ ! -d /var/www/html/profiles/contrib/social/tests/behat/features/symfony-mailer-spool ]; then
+      mkdir /var/www/html/profiles/contrib/social/tests/behat/features/symfony-mailer-spool;
+    fi
+    chmod 777 -R /var/www/html/profiles/contrib/social/tests/behat/features/symfony-mailer-spool;
+    chown -R www-data:www-data /var/www/html/profiles/contrib/social/tests/behat/features/symfony-mailer-spool;
+
+    # Configure mailcatcher transport
     drush ev "\Drupal::service('config.factory')->getEditable('symfony_mailer.mailer_transport.mailcatcher')->set('id', 'mailcatcher')->save();"
     drush cset symfony_mailer.mailer_transport.mailcatcher label Mailcatcher -y
     drush cset symfony_mailer.mailer_transport.mailcatcher plugin smtp -y
@@ -132,6 +133,14 @@ if [[ $(drush ev "echo getenv('DRUPAL_SETTINGS');" | grep "development") ]] || [
     drush cset symfony_mailer.settings default_transport mailcatcher -y
     echo "updated symfony mailer settings"
   else
+    # Create spool directory for behat tests
+    if [ ! -d /var/www/html/profiles/contrib/social/tests/behat/features/swiftmailer-spool ]; then
+      mkdir /var/www/html/profiles/contrib/social/tests/behat/features/swiftmailer-spool;
+    fi
+    chmod 777 -R /var/www/html/profiles/contrib/social/tests/behat/features/swiftmailer-spool;
+    chown -R www-data:www-data /var/www/html/profiles/contrib/social/tests/behat/features/swiftmailer-spool;
+
+    # Configure mailcatcher transport
     drush cset swiftmailer.transport transport 'smtp' -y
     drush cset swiftmailer.transport smtp_host 'mailcatcher' -y
     drush cset swiftmailer.transport smtp_port 1025 -y
