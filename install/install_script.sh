@@ -64,13 +64,8 @@ if [ -f /var/www/html/sites/default/default.settings.php ]; then
   rm /var/www/html/sites/default/default.settings.php
 fi
 
-# Do something similar for drushrc.php. This will make drush know the uri of your dev site.
-if [ -f /var/www/html/sites/default/drushrc.php ]; then
-  chmod 777 /var/www/html/sites/default/drushrc.php
-  rm /var/www/html/sites/default/drushrc.php
-fi
-
 cp /var/www/scripts/social/install/default.settings.php /var/www/html/sites/default/default.settings.php
+cp /var/www/scripts/social/install/settings.local.php /var/www/html/sites/default/settings.local.php
 
 # Only add the drushrc file when the VIRTUAL HOST is set.
 if [[ "$VIRTUAL_HOST" != "" ]]; then
@@ -100,7 +95,7 @@ if [[ ${NFS} != "nfs" ]]
 php -r 'opcache_reset();';
 fn_sleep
 echo "opcache reset"
-chmod 444 sites/default/settings.php
+chmod 644 sites/default/settings.php
 
 # Create private files directory.
 if [ ! -d /var/www/files_private ]; then
