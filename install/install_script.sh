@@ -67,12 +67,6 @@ fi
 cp /var/www/scripts/social/install/default.settings.php /var/www/html/sites/default/default.settings.php
 cp /var/www/scripts/social/install/settings.local.php /var/www/html/sites/default/settings.local.php
 
-# Only add the drushrc file when the VIRTUAL HOST is set.
-if [[ "$VIRTUAL_HOST" != "" ]]; then
-  # Copy the default drushrc.php file and try to replace VIRTUAL_HOST var.
-  sed "s/VHOST/$VIRTUAL_HOST/g" /var/www/scripts/social/install/default.drushrc.php > /var/www/html/sites/default/drushrc.php
-fi
-
 if [[ ${OPTIONAL} == "optional" ]]; then
   # Install with the optional modules declaring having a module.installer_options.yml
   # See #3110127
