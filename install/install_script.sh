@@ -115,8 +115,8 @@ chmod 777 -R sites/default/files
 
 # Make sure we add mailer default settings if the environment is development
 if [[ $(drush ev "echo getenv('DRUPAL_SETTINGS');" | grep "development") ]] || [[ ${SETTINGS} = "local" ]]; then
-  # Enable symfony mailer only for the OS 12+
-  if [ -n ${OS_VERSION} ] && [ ${OS_VERSION} -ge "12000000000" ]; then
+  # Enable symfony mailer only for the OS 11.5+
+  if [ -n ${OS_VERSION} ] && [ ${OS_VERSION} -ge "11500000000" ]; then
     # Create spool directory for behat tests
     if [ ! -d /var/www/html/profiles/contrib/social/tests/behat/features/symfony-mailer-spool ]; then
       mkdir /var/www/html/profiles/contrib/social/tests/behat/features/symfony-mailer-spool;
