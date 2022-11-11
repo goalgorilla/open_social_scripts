@@ -719,10 +719,6 @@ if (isset($_ENV['DRUPAL_SETTINGS'])) {
 /** Todo: create better patterns on production sites */
 if ($drupal_settings !== 'production') {
   $settings['trusted_host_patterns'] = array('[\s\S]*');
-
-  // Necessary as per #3188183.
-  $settings['swiftmailer.transport']['smtp_host'] = 'mailcatcher';
-  $settings['swiftmailer.transport']['smtp_port'] = '1025';
 }
 
 /**
