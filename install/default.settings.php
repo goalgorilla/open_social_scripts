@@ -738,6 +738,8 @@ $settings['file_private_path'] =  '/var/www/files_private';
  */
 if ($drupal_settings === 'development' && file_exists(__DIR__ . '/settings.local.php')) {
   include __DIR__ . '/settings.local.php';
+  // See: https://www.drupal.org/docs/contributed-modules/symfony-mailer-0/getting-started#s-mailhog
+  $config['symfony_mailer.mailer_transport.sendmail']['configuration']['query']['command'] = ini_get('sendmail_path') . ' -t';
 }
 
 /** Everything after here is added by the installation process.
