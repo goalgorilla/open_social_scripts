@@ -125,12 +125,11 @@ if [[ $(drush ev "echo getenv('DRUPAL_SETTINGS');" | grep "development") ]] || [
     chown -R www-data:www-data /var/www/html/profiles/contrib/social/tests/behat/features/symfony-mailer-spool;
 
     # Configure mailcatcher transport
-    drush ev "\Drupal::service('config.factory')->getEditable('symfony_mailer.mailer_transport.mailcatcher')->set('id', 'mailcatcher')->save();"
-    drush cset symfony_mailer.mailer_transport.mailcatcher label Mailcatcher -y
-    drush cset symfony_mailer.mailer_transport.mailcatcher plugin smtp -y
-    drush cset symfony_mailer.mailer_transport.mailcatcher configuration.host mailcatcher -y
-    drush cset symfony_mailer.mailer_transport.mailcatcher configuration.port 1025 -y
-    drush cset symfony_mailer.settings default_transport mailcatcher -y
+    drush cset symfony_mailer.mailer_transport.sendmail plugin 'smtp' -y
+    drush cset symfony_mailer.mailer_transport.sendmail configuration.user '' -y
+    drush cset symfony_mailer.mailer_transport.sendmail configuration.passs '' -y
+    drush cset symfony_mailer.mailer_transport.sendmail configuration.host 'mailcatcher' -y
+    drush cset symfony_mailer.mailer_transport.sendmail configuration.port '1025' -y
     echo "updated symfony mailer settings"
   else
     # Create spool directory for behat tests
