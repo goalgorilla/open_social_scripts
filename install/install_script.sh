@@ -127,7 +127,7 @@ if [[ $(drush ev "echo getenv('DRUPAL_SETTINGS');" | grep "development") ]] || [
     # Configure mailcatcher transport
     drush cset symfony_mailer.mailer_transport.sendmail plugin 'smtp' -y
     drush cset symfony_mailer.mailer_transport.sendmail configuration.user '' -y
-    drush cset symfony_mailer.mailer_transport.sendmail configuration.passs '' -y
+    drush cset symfony_mailer.mailer_transport.sendmail configuration.pass '' -y
     drush cset symfony_mailer.mailer_transport.sendmail configuration.host 'mailcatcher' -y
     drush cset symfony_mailer.mailer_transport.sendmail configuration.port '1025' -y
     echo "updated symfony mailer settings"
