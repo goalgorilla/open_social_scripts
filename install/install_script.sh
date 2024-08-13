@@ -144,6 +144,16 @@ else
   drush cc drush
   drush if --all
   fn_sleep
+
+  # Since Drupal 10.3 the session table only be created when a session is started.
+  # So I created a temp-session and destroy in sequence.
+  if drush ev "echo (int) Composer\Semver\Comparator::greaterThanOrEqualTo(\Drupal::VERSION, '10.3.0-dev');" | grep -q '1'; then
+    echo "Create session to create the session table"
+    drush php-eval "\Drupal::service('session_handler.storage')->write('TempSession', TRUE)"
+    drush php-eval "\Drupal::service('session_handler.storage')->destroy('TempSession')"
+    fn_sleep
+  fi
+
   echo "run activity queues"
   # Since we are now having ultimate cron and advance queue, we need to run drush cron separately as drush queue:run doesn't works.
   drush cron
