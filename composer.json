@@ -11,7 +11,7 @@
     "homepage": "https://github.com/goalgorilla/open_social_scripts",
     "minimum-stability": "dev",
     "require": {
-        "composer/installers": "^1.0"
+        "composer/installers": "^1.0 || ^2.0"
     },
     "extra": {
         "installer-name": "social"
